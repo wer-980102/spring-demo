@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wer.parking.mapper.source1.PakParkingPayInfoMapper">
+    
+    <resultMap type="com.wer.parking.model.PakParkingPayInfo" id="PakParkingPayInfoResult">
+        <result property="payId"    column="pay_id"    />
+        <result property="parkingId"    column="parking_id"    />
+        <result property="carPlate"    column="car_plate"    />
+        <result property="carPlate"    column="car_plate"    />
+        <result property="payOrderNum"    column="pay_order_num"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="paySource"    column="pay_source"    />
+        <result property="payClient"    column="pay_client"    />
+        <result property="payChanel"    column="pay_chanel"    />
+        <result property="payment"    column="payment"    />
+        <result property="actualPayment"    column="actual_payment"    />
+        <result property="change"    column="change"    />
+        <result property="actualChange"    column="actual_change"    />
+        <result property="changeChenel"    column="change_chanel"    />
+        <result property="freeTime"    column="free_time"    />
+        <result property="freeMoney"    column="free_money"    />
+        <result property="parkingOrderNum"    column="parking_order_num"    />
+        <result property="reqid"    column="reqId"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="parkSourceData"    column="park_source_data"    />
+    </resultMap>
+
+    <sql id="selectPakParkingPayInfoVo">
+        select pay_id,parking_id,car_plate, pay_order_num, pay_time, pay_source, pay_client, pay_chanel, payment, actual_payment, change, actual_change, change_chanel, free_time, free_money, parking_order_num, reqId, create_by, create_time, update_by, update_time, remark, park_source_data from pak_parking_pay_info
+    </sql>
+
+    <select id="selectPakParkingPayInfoList" parameterType="com.wer.parking.model.PakParkingPayInfo" resultMap="PakParkingPayInfoResult">
+        <include refid="selectPakParkingPayInfoVo"/>
+        <where>  
+            <if test="payOrderNum != null  and payOrderNum != ''"> and pay_order_num = #{payOrderNum}</if>
+            <if test="payTime != null "> and pay_time = #{payTime}</if>
+            <if test="paySource != null  and paySource != ''"> and pay_source = #{paySource}</if>
+            <if test="payClient != null  and payClient != ''"> and pay_client = #{payClient}</if>
+            <if test="payChanel != null  and payChanel != ''"> and pay_chanel = #{payChanel}</if>
+            <if test="payment != null  and payment != ''"> and payment = #{payment}</if>
+            <if test="actualPayment != null  and actualPayment != ''"> and actual_payment = #{actualPayment}</if>
+            <if test="change != null  and change != ''"> and change = #{change}</if>
+            <if test="actualChange != null  and actualChange != ''"> and actual_change = #{actualChange}</if>
+            <if test="changeChenel != null  and changeChenel != ''"> and change_chanel = #{changeChenel}</if>
+            <if test="freeTime != null  and freeTime != ''"> and free_time = #{freeTime}</if>
+            <if test="freeMoney != null  and freeMoney != ''"> and free_money = #{freeMoney}</if>
+            <if test="parkingOrderNum != null  and parkingOrderNum != ''"> and parking_order_num = #{parkingOrderNum}</if>
+            <if test="reqid != null  and reqid != ''"> and reqId = #{reqid}</if>
+        </where>
+    </select>
+    
+    <select id="selectPakParkingPayInfoById" parameterType="Long" resultMap="PakParkingPayInfoResult">
+        <include refid="selectPakParkingPayInfoVo"/>
+        where pay_id = #{payId}
+    </select>
+
+    <select id="getPayInfo" parameterType="com.wer.parking.model.param.ParkAccessInfoParam" resultMap="PakParkingPayInfoResult">
+        <include refid="selectPakParkingPayInfoVo"/>
+        <where>
+            <if test="parkSourceData != null and parkSourceData != ''">
+                and park_source_data = #{parkSourceData}
+            </if>
+        </where>
+        order by create_time desc limit 1,#{pageNum}
+    </select>
+    <insert id="insertPakParkingPayInfo" parameterType="com.wer.parking.model.PakParkingPayInfo" useGeneratedKeys="true" keyProperty="payId">
+        insert into pak_parking_pay_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="payId != null">parking_id,</if>
+            <if test="carPlate != null and carPlate != ''">car_plate,</if>
+            <if test="payOrderNum != null and payOrderNum != ''">pay_order_num,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="paySource != null">pay_source,</if>
+            <if test="payClient != null">pay_client,</if>
+            <if test="payChanel != null">pay_chanel,</if>
+            <if test="payment != null">payment,</if>
+            <if test="actualPayment != null">actual_payment,</if>
+            <if test="change != null">`change`,</if>
+            <if test="actualChange != null">actual_change,</if>
+            <if test="changeChenel != null">change_chanel,</if>
+            <if test="freeTime != null">free_time,</if>
+            <if test="freeMoney != null">free_money,</if>
+            <if test="parkingOrderNum != null">parking_order_num,</if>
+            <if test="reqid != null">reqId,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="parkSourceData != null and parkSourceData!=''">park_source_data</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="payId != null">#{payId},</if>
+            <if test="carPlate != null and carPlate != ''">#{carPlate},</if>
+            <if test="payOrderNum != null and payOrderNum != ''">#{payOrderNum},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="paySource != null">#{paySource},</if>
+            <if test="payClient != null">#{payClient},</if>
+            <if test="payChanel != null">#{payChanel},</if>
+            <if test="payment != null">#{payment},</if>
+            <if test="actualPayment != null">#{actualPayment},</if>
+            <if test="change != null">#{change},</if>
+            <if test="actualChange != null">#{actualChange},</if>
+            <if test="changeChenel != null">#{changeChenel},</if>
+            <if test="freeTime != null">#{freeTime},</if>
+            <if test="freeMoney != null">#{freeMoney},</if>
+            <if test="parkingOrderNum != null">#{parkingOrderNum},</if>
+            <if test="reqid != null">#{reqid},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="parkSourceData != null and parkSourceData!=''">#{parkSourceData}</if>
+         </trim>
+    </insert>
+
+    <update id="updatePakParkingPayInfo" parameterType="com.wer.parking.model.PakParkingPayInfo">
+        update pak_parking_pay_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payId != null">parking_id = #{payId},</if>
+            <if test="carPlate != null and carPlate != ''">car_plate = #{carPlate},</if>
+            <if test="payOrderNum != null and payOrderNum != ''">pay_order_num = #{payOrderNum},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="paySource != null">pay_source = #{paySource},</if>
+            <if test="payClient != null">pay_client = #{payClient},</if>
+            <if test="payChanel != null">pay_chanel = #{payChanel},</if>
+            <if test="payment != null">payment = #{payment},</if>
+            <if test="actualPayment != null">actual_payment = #{actualPayment},</if>
+            <if test="change != null">`change` = #{change},</if>
+            <if test="actualChange != null">actual_change = #{actualChange},</if>
+            <if test="changeChenel != null">change_chanel = #{changeChenel},</if>
+            <if test="freeTime != null">free_time = #{freeTime},</if>
+            <if test="freeMoney != null">free_money = #{freeMoney},</if>
+            <if test="parkingOrderNum != null">parking_order_num = #{parkingOrderNum},</if>
+            <if test="reqid != null">reqId = #{reqid},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="parkSourceData != null and parkSourceData != ''">park_source_data = #{parkSourceData},</if>
+        </trim>
+        where pay_id = #{payId}
+    </update>
+
+    <update id="updatePakParkingLooseChange" parameterType="com.wer.parking.model.PakParkingPayInfo">
+        update pak_parking_pay_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="paySource != null">pay_source = #{paySource},</if>
+            <if test="payClient != null">pay_client = #{payClient},</if>
+            <if test="payChanel != null">pay_chanel = #{payChanel},</if>
+            <if test="payment != null">payment = #{payment},</if>
+            <if test="actualPayment != null">actual_payment = #{actualPayment},</if>
+            <if test="change != null">`change` = #{change},</if>
+            <if test="actualChange != null">actual_change = #{actualChange},</if>
+            <if test="changeChenel != null">change_chanel = #{changeChenel},</if>
+            <if test="freeTime != null">free_time = #{freeTime},</if>
+            <if test="freeMoney != null">free_money = #{freeMoney},</if>
+            <if test="parkingOrderNum != null">parking_order_num = #{parkingOrderNum},</if>
+            <if test="reqid != null">reqId = #{reqid},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="parkSourceData != null and parkSourceData != ''">park_source_data = #{parkSourceData},</if>
+        </trim>
+        <where>
+            <if test="carPlate != null and carPlate != ''">
+               and car_plate = #{carPlate}
+            </if>
+            <if test="parkingOrderNum != null">
+               and pay_order_num = #{payOrderNum}
+            </if>
+            <if test="payId != null">
+               and parking_id = #{payId}
+            </if>
+        </where>
+    </update>
+
+    <delete id="deletePakParkingPayInfoById" parameterType="Long">
+        delete from pak_parking_pay_info where pay_id = #{payId}
+    </delete>
+
+    <delete id="deletePakParkingPayInfoByIds" parameterType="String">
+        delete from pak_parking_pay_info where pay_id in 
+        <foreach item="payId" collection="array" open="(" separator="," close=")">
+            #{payId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wer.parking.mapper.source1.PakAccessInfoMapper">
+    
+    <resultMap type="com.wer.parking.model.PakAccessInfo" id="PakAccessInfoResult">
+        <result property="accessId"    column="access_id"    />
+        <result property="carPlate"    column="car_plate"    />
+        <result property="parkingId"    column="parking_id"    />
+        <result property="entryPassageId"    column="entry_passage_id"    />
+        <result property="entryPhoto"    column="entry_photo"    />
+        <result property="entryOperator"    column="entry_operator"    />
+        <result property="entryTime"    column="entry_time"    />
+        <result property="quitPassageId"    column="quit_passage_id"    />
+        <result property="quitPhoto"    column="quit_photo"    />
+        <result property="quitOperator"    column="quit_operator"    />
+        <result property="quitTime"    column="quit_time"    />
+        <result property="entryType"    column="entry_type"    />
+        <result property="quitType"    column="quit_type"    />
+        <result property="quitRemark"    column="quit_remark"    />
+        <result property="entryReqid"    column="entry_reqId"    />
+        <result property="quitReqid"    column="quit_reqId"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="carPlateType"    column="car_plate_type"    />
+        <result property="carType"    column="car_type"    />
+        <result property="payId"    column="pay_id"    />
+        <result property="parkSourceData"    column="park_source_data"    />
+    </resultMap>
+
+    <sql id="selectPakAccessInfoVo">
+        select access_id, car_plate, parking_id, entry_passage_id, entry_photo, entry_operator, entry_time, quit_passage_id, quit_photo, quit_operator, quit_time, car_plate_type,entry_type,quit_type, quit_remark, entry_reqId, quit_reqId, create_by, create_time, update_by, update_time, remark,pay_id, park_source_data from pak_access_info
+    </sql>
+
+    <select id="selectPakAccessInfoList" parameterType="com.wer.parking.model.PakAccessInfo" resultMap="PakAccessInfoResult">
+        <include refid="selectPakAccessInfoVo"/>
+        <where>  
+            <if test="carPlate != null  and carPlate != ''"> and car_plate = #{carPlate}</if>
+            <if test="parkingId != null "> and parking_id = #{parkingId}</if>
+            <if test="entryPassageId != null "> and entry_passage_id = #{entryPassageId}</if>
+            <if test="entryPhoto != null  and entryPhoto != ''"> and entry_photo = #{entryPhoto}</if>
+            <if test="entryOperator != null  and entryOperator != ''"> and entry_operator = #{entryOperator}</if>
+            <if test="entryTime != null "> and entry_time = #{entryTime}</if>
+            <if test="quitPassageId != null "> and quit_passage_id = #{quitPassageId}</if>
+            <if test="quitPhoto != null  and quitPhoto != ''"> and quit_photo = #{quitPhoto}</if>
+            <if test="quitOperator != null  and quitOperator != ''"> and quit_operator = #{quitOperator}</if>
+            <if test="quitTime != null "> and quit_time = #{quitTime}</if>
+            <if test="quitType != null  and quitType != ''"> and quit_type = #{quitType}</if>
+            <if test="quitRemark != null  and quitRemark != ''"> and quit_remark = #{quitRemark}</if>
+            <if test="entryReqid != null  and entryReqid != ''"> and entry_reqId = #{entryReqid}</if>
+            <if test="quitReqid != null  and quitReqid != ''"> and quit_reqId = #{quitReqid}</if>
+        </where>
+    </select>
+    
+    <select id="selectPakAccessInfoById" parameterType="com.wer.parking.model.param.ParkAccessInfoParam" resultMap="PakAccessInfoResult">
+        <include refid="selectPakAccessInfoVo"/>
+        <where>
+            <if test="parkSourceData != null and parkSourceData != ''">
+                and park_source_data = #{parkSourceData}
+            </if>
+        </where>
+        order by create_time desc limit 1,#{pageNum}
+    </select>
+
+    <select id="getPakAccessInfoById" parameterType="com.wer.parking.model.PakAccessInfo" resultMap="PakAccessInfoResult">
+        <include refid="selectPakAccessInfoVo"/>
+        <where>
+            <if test="carPlate != null and carPlate != ''">
+                and  car_plate = #{carPlate}
+            </if>
+            <if test="parkingId != null and parkingId != ''">
+                and  parking_id = #{parkingId}
+            </if>
+            <if test="entryReqid != null and entryReqid != ''">
+                and entry_reqId = #{entryReqid}
+            </if>
+        </where>
+        order by create_time desc limit 1
+    </select>
+    <select id="getEntryReqId" parameterType="java.lang.String" resultType="java.lang.String">
+        select entry_reqId as entryReqId from pak_access_info  where car_plate = #{carPlate} order by entry_time desc limit 1
+    </select>
+
+    <insert id="insertPakAccessInfo" parameterType="com.wer.parking.model.PakAccessInfo" useGeneratedKeys="true" keyProperty="accessId">
+        insert into pak_access_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carPlate != null and carPlate != ''">car_plate,</if>
+            <if test="parkingId != null">parking_id,</if>
+            <if test="entryPassageId != null">entry_passage_id,</if>
+            <if test="entryPhoto != null">entry_photo,</if>
+            <if test="entryOperator != null">entry_operator,</if>
+            <if test="entryTime != null">entry_time,</if>
+            <if test="quitPassageId != null">quit_passage_id,</if>
+            <if test="quitPhoto != null">quit_photo,</if>
+            <if test="quitOperator != null">quit_operator,</if>
+            <if test="quitTime != null">quit_time,</if>
+            <if test="entryType != null">entry_type,</if>
+            <if test="quitType != null">quit_type,</if>
+            <if test="quitRemark != null">quit_remark,</if>
+            <if test="entryReqid != null">entry_reqId,</if>
+            <if test="quitReqid != null">quit_reqId,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="carPlateType != null">car_plate_type,</if>
+            <if test="carType != null">car_type,</if>
+            <if test="payId != null and payId!=''">pay_id</if>
+            <if test="parkSourceData != null and parkSourceData!=''">park_source_data</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="carPlate != null and carPlate != ''">#{carPlate},</if>
+            <if test="parkingId != null">#{parkingId},</if>
+            <if test="entryPassageId != null">#{entryPassageId},</if>
+            <if test="entryPhoto != null">#{entryPhoto},</if>
+            <if test="entryOperator != null">#{entryOperator},</if>
+            <if test="entryTime != null">#{entryTime},</if>
+            <if test="quitPassageId != null">#{quitPassageId},</if>
+            <if test="quitPhoto != null">#{quitPhoto},</if>
+            <if test="quitOperator != null">#{quitOperator},</if>
+            <if test="quitTime != null">#{quitTime},</if>
+            <if test="entryType != null">#{entryType},</if>
+            <if test="quitType != null">#{quitType},</if>
+            <if test="quitRemark != null">#{quitRemark},</if>
+            <if test="entryReqid != null">#{entryReqid},</if>
+            <if test="quitReqid != null">#{quitReqid},</if>
+            <if test="createBy != null">#{createName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="carPlateType != null">#{carPlateType},</if>
+            <if test="carType != null">#{carType},</if>
+            <if test="payId != null and payId!=''">#{payId}</if>
+            <if test="parkSourceData != null and parkSourceData!=''">#{parkSourceData}</if>
+         </trim>
+    </insert>
+
+    <update id="updatePakAccessInfo" parameterType="com.wer.parking.model.PakAccessInfo" >
+        update pak_access_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="carPlate != null and carPlate != ''">car_plate = #{carPlate},</if>
+            <if test="parkingId != null">parking_id = #{parkingId},</if>
+            <if test="entryPassageId != null">entry_passage_id = #{entryPassageId},</if>
+            <if test="entryPhoto != null">entry_photo = #{entryPhoto},</if>
+            <if test="entryOperator != null">entry_operator = #{entryOperator},</if>
+            <if test="entryTime != null">entry_time = #{entryTime},</if>
+            <if test="quitPassageId != null">quit_passage_id = #{quitPassageId},</if>
+            <if test="quitPhoto != null">quit_photo = #{quitPhoto},</if>
+            <if test="quitOperator != null">quit_operator = #{quitOperator},</if>
+            <if test="quitTime != null">quit_time = #{quitTime},</if>
+            <if test="entryType != null">entry_type = #{entryType},</if>
+            <if test="quitType != null">quit_type = #{quitType},</if>
+            <if test="quitRemark != null">quit_remark = #{quitRemark},</if>
+            <if test="entryReqid != null">entry_reqId = #{entryReqid},</if>
+            <if test="quitReqid != null">quit_reqId = #{quitReqid},</if>
+            <if test="createBy != null">create_by = #{createName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="carType != null">car_type = #{carType},</if>
+            <if test="payId != null and payId != ''">pay_id = #{payId},</if>
+            <if test="parkSourceData != null and parkSourceData != ''">park_source_data = #{parkSourceData},</if>
+        </trim>
+        where access_id = #{accessId}
+    </update>
+
+    <update id="updatePakAccessOutInfo" parameterType="com.wer.parking.model.PakAccessInfo" >
+        update pak_access_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entryPassageId != null">entry_passage_id = #{entryPassageId},</if>
+            <if test="entryPhoto != null">entry_photo = #{entryPhoto},</if>
+            <if test="entryOperator != null">entry_operator = #{entryOperator},</if>
+            <if test="entryTime != null">entry_time = #{entryTime},</if>
+            <if test="quitPassageId != null">quit_passage_id = #{quitPassageId},</if>
+            <if test="quitPhoto != null">quit_photo = #{quitPhoto},</if>
+            <if test="quitOperator != null">quit_operator = #{quitOperator},</if>
+            <if test="quitTime != null">quit_time = #{quitTime},</if>
+            <if test="entryType != null">entry_type = #{entryType},</if>
+            <if test="entryReqid != null">entry_reqId = #{entryReqid},</if>
+            <if test="quitType != null">quit_type = #{quitType},</if>
+            <if test="quitRemark != null">quit_remark = #{quitRemark},</if>
+            <if test="quitReqid != null">quit_reqId = #{quitReqid},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="carType != null">car_type = #{carType},</if>
+            <if test="payId != null and payId != ''">pay_id = #{payId},</if>
+            <if test="parkSourceData != null and parkSourceData != ''">park_source_data = #{parkSourceData},</if>
+        </trim>
+        where parking_id = #{parkingId} and car_plate = #{carPlate} and entry_reqId = #{entryReqid}
+    </update>
+
+    <delete id="deletePakAccessInfoById" parameterType="Long">
+        delete from pak_access_info where access_id = #{accessId}
+    </delete>
+
+    <delete id="deletePakAccessInfoByIds" parameterType="String">
+        delete from pak_access_info where access_id in 
+        <foreach item="accessId" collection="array" open="(" separator="," close=")">
+            #{accessId}
+        </foreach>
+    </delete>
+
+
+    <resultMap type="com.wer.parking.model.PakParking" id="PakParkingResult">
+        <result property="parkingId"    column="parking_id"    />
+        <result property="parkingCode"    column="parking_code"    />
+        <result property="parkingName"    column="parking_name"    />
+        <result property="address"    column="address"    />
+        <result property="lat"    column="lat"    />
+        <result property="lon"    column="lon"    />
+        <result property="totalStall"    column="total_stall"    />
+        <result property="freeStall"    column="free_stall"    />
+        <result property="reqid"    column="reqId"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkSourceData"    column="park_source_data"    />
+    </resultMap>
+
+    <sql id="selectPakParkingVo">
+        select parking_id, parking_code, parking_name, total_stall, free_stall, reqId, status, del_flag, create_by,address,
+               lat,lon,create_time, update_by, update_time, remark, tenant_id ,park_source_data from pak_parking
+    </sql>
+
+    <select id="selectPakParkingById" parameterType="Long" resultMap="PakParkingResult">
+        <include refid="selectPakParkingVo"/>
+        where parking_code = #{parkingId} limit 1
+    </select>
+
+    <resultMap type="com.wer.parking.model.PakPassage" id="PakPassageResult">
+        <result property="passageId"    column="passage_id"    />
+        <result property="parkingId"    column="parking_id"    />
+        <result property="passageName"    column="passage_name"    />
+        <result property="passageType"    column="passage_type"    />
+        <result property="reqid"    column="reqId"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="passageCode"    column="passage_code"    />
+        <result property="passageIp"    column="passage_ip"    />
+        <result property="parkSourceData"    column="park_source_data"    />
+    </resultMap>
+
+    <sql id="selectPakPassageVo">
+        select passage_id, parking_id, passage_name, passage_type, reqId, status,
+               passage_code,passage_ip,del_flag, create_by, create_time, update_by, update_time, remark, park_source_data from pak_passage
+    </sql>
+    <select id="selectPakPassageByName" parameterType="com.wer.parking.model.PakPassage" resultMap="PakPassageResult">
+    <include refid="selectPakPassageVo"/>
+    <where>
+        <if test="parkingId != null and parkingId != 0 ">
+            and parking_id = #{parkingId}
+        </if>
+        <if test="passageName != null and passageName.length()>0">
+            and passage_name like concat('%', #{passageName,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="passageId != null and passageId != ''">
+            and entry_passage_id = #{passageId}
+        </if>
+        limit 1
+    </where>
+    </select>
+</mapper>
