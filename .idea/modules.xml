@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/docker-boot/docker-boot.iml" filepath="$PROJECT_DIR$/docker-boot/docker-boot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/elasticsearch/elasticsearch.iml" filepath="$PROJECT_DIR$/elasticsearch/elasticsearch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/encapsulation-netty/encapsulation-netty.iml" filepath="$PROJECT_DIR$/encapsulation-netty/encapsulation-netty.iml" />
+      <module fileurl="file://$PROJECT_DIR$/netty/netty.iml" filepath="$PROJECT_DIR$/netty/netty.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parking-test/parking-test.iml" filepath="$PROJECT_DIR$/parking-test/parking-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../spring/spring-source/spring-source.iml" filepath="$PROJECT_DIR$/../spring/spring-source/spring-source.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-work/spring-work.iml" filepath="$PROJECT_DIR$/spring-work/spring-work.iml" />
+      <module fileurl="file://$PROJECT_DIR$/websocket/websocket.iml" filepath="$PROJECT_DIR$/websocket/websocket.iml" />
+    </modules>
+  </component>
+</project>

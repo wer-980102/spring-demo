@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="encapsulation-netty" />
+        <module name="elasticsearch" />
+        <module name="spring-work" />
+        <module name="websocket" />
+        <module name="docker-boot" />
+        <module name="parking-test" />
+        <module name="netty" />
+        <module name="spring-source" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="docker-boot" target="1.8" />
+      <module name="elasticsearch" target="1.8" />
+      <module name="encapsulation-netty" target="1.8" />
+      <module name="netty" target="1.8" />
+      <module name="parking-test" target="1.8" />
+      <module name="spring-boot-docker" target="1.8" />
+      <module name="spring-source" target="1.8" />
+      <module name="spring-work" target="1.8" />
+      <module name="websocket" target="1.8" />
+      <module name="work" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="docker-boot" options="-parameters" />
+      <module name="elasticsearch" options="-parameters" />
+      <module name="encapsulation-netty" options="-parameters" />
+      <module name="netty" options="-parameters" />
+      <module name="parking-test" options="-parameters" />
+      <module name="spring-boot-docker" options="-parameters" />
+      <module name="spring-work" options="-parameters" />
+      <module name="websocket" options="-parameters" />
+      <module name="work" options="-parameters" />
+    </option>
+  </component>
+</project>
