@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPakParkingPayInfoVo">
-        select pay_id,parking_id,car_plate, pay_order_num, pay_time, pay_source, pay_client, pay_chanel, payment, actual_payment, change, actual_change, change_chanel, free_time, free_money, parking_order_num, reqId, create_by, create_time, update_by, update_time, remark, park_source_data from pak_parking_pay_info
+        select pay_id,parking_id,car_plate, pay_order_num, pay_time, pay_source, pay_client, pay_chanel, payment, actual_payment,  actual_change, change_chanel, free_time, free_money, parking_order_num, reqId, create_by, create_time, update_by, update_time, remark, park_source_data from pak_parking_pay_info
     </sql>
 
     <select id="selectPakParkingPayInfoList" parameterType="com.wer.parking.model.PakParkingPayInfo" resultMap="PakParkingPayInfoResult">

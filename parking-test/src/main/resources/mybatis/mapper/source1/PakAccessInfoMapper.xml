@@ -79,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and entry_reqId = #{entryReqid}
             </if>
         </where>
-        order by create_time desc limit 1
+            order by create_time desc limit 1
     </select>
     <select id="getEntryReqId" parameterType="java.lang.String" resultType="java.lang.String">
         select entry_reqId as entryReqId from pak_access_info  where car_plate = #{carPlate} order by entry_time desc limit 1
@@ -274,7 +274,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and passage_name like concat('%', #{passageName,jdbcType=VARCHAR}, '%')
         </if>
         <if test="passageId != null and passageId != ''">
-            and entry_passage_id = #{passageId}
+            and passage_id = #{passageId}
         </if>
         limit 1
     </where>

@@ -29,6 +29,7 @@ import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -65,6 +66,7 @@ public class RequestPakAccessInfoController {
      * 入场信息
      * @param param
      */
+    @Transactional
     @GetMapping("/getAccessInfo")
     public String getAccessInfo(@RequestBody ParkAccessInfoParam param){
 
@@ -100,22 +102,22 @@ public class RequestPakAccessInfoController {
                         .parking_name(pakParking.getParkingName())
                         .total_stall(pakParking.getTotalStall())
                         .free_stall(pakParking.getFreeStall())
-                        .entry_passage_id(String.valueOf(pakPassage.getPassageId()))
-                        .entry_passage_name(pakPassage.getPassageName())
+                        .entry_passage_id(String.valueOf(dto.getEntryPassageId()))
+                        .entry_passage_name(pakPassage != null?(pakPassage.getPassageName()!= null?pakPassage.getPassageName():"泰安通道"):"泰安通道")
                         .entry_photo(dto.getEntryPhoto())
-                        .entry_operator(dto.getEntryOperator())
+                        .entry_operator("admin")
                         .entry_time(dto.getEntryTime())
-                        .car_plate_type(dto.getCarType().toString())
+                        .car_plate_type(dto.getCarType() != null?dto.getCarType().toString():"0")
                         .entry_type(dto.getEntryType())
-                        .car_type(String.valueOf(dto.getCarType()))
+                        .car_type(dto.getCarType() != null?dto.getCarType().toString():"0")
                         .entry_reqId(dto.getEntryReqid())
-                        .quit_passage_id(pakPassage.getPassageId().toString())
-                        .quit_passage_name(pakPassage.getPassageName())
-                        .quit_type(dto.getQuitType())
+                        .quit_passage_id(dto.getQuitPassageId()!=null?dto.getQuitPassageId().toString():"0000")
+                        .quit_passage_name(pakPassage != null?(pakPassage.getPassageName()!= null?pakPassage.getPassageName():"泰安通道"):"泰安通道")
+                        .quit_type(String.valueOf(dto.getQuitType())!= null?dto.getQuitType():"0")
                         .quit_time(TimeUtils.getDate(TimeUtils.getCurrentTime("3")))
-                        .quit_photo(dto.getQuitPhoto())
+                        .quit_photo(dto.getQuitPhoto() == null?"test.jpg":dto.getQuitPhoto())
                         .quit_operator("admin")
-                        .quit_remark(dto.getQuitRemark())
+                        .quit_remark(dto.getQuitRemark() == null?"没有备注":dto.getQuitRemark())
                         .quit_reqId(dto.getQuitReqid())
                         .park_source_data(param.getParkSourceData()).build();
 
@@ -165,7 +167,7 @@ public class RequestPakAccessInfoController {
      * 缴费信息
      * @return
      */
-    @GetMapping("/getOutAccessInfo")
+    @GetMapping("/getPayInfo")
     public String getOutAccessInfo(@RequestBody ParkAccessInfoParam param){
         List<PakParkingPayInfo> parkPayInfo = pakParkingPayInfoMapper.getPayInfo(param);
         parkPayInfo.stream().forEach(PakParkingPayInfo->{
@@ -197,9 +199,9 @@ public class RequestPakAccessInfoController {
                         .parking_name(pakParking.getParkingName())
                         .car_plate(PakParkingPayInfo.getCarPlate())
                         .car_plate_type("0")
-                        .quit_type(pakAccessInfoById.getQuitType())
-                        .entry_time(pakAccessInfoById.getEntryTime())
-                        .quit_time(pakAccessInfoById.getQuitTime())
+                        .quit_type(pakAccessInfoById!= null ?pakAccessInfoById.getQuitType():"0")
+                        .entry_time(pakAccessInfoById!= null ?pakAccessInfoById.getEntryTime():TimeUtils.getDate(TimeUtils.getCurrentTime("5")))
+                        .quit_time(pakAccessInfoById!= null ?pakAccessInfoById.getQuitTime():TimeUtils.getDate(TimeUtils.getCurrentTime("3")))
                         .pay_order_num(PakParkingPayInfo.getPayOrderNum())
                         .pay_time(PakParkingPayInfo.getPayTime())
                         .pay_source(PakParkingPayInfo.getPaySource())
