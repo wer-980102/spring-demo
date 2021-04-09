@@ -1,8 +1,8 @@
 package com.wer.parking.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysql.cj.util.StringUtils;
 import com.wer.parking.mapper.source1.PakAccessInfoMapper;
+import com.wer.parking.mapper.source1.PakParkingMapper;
 import com.wer.parking.mapper.source1.PakParkingPayInfoMapper;
 import com.wer.parking.mapper.source2.PakAccessInfoTwoMapper;
 import com.wer.parking.mapper.source2.PakParkingPayInfoTwoMapper;
@@ -13,10 +13,14 @@ import com.wer.parking.model.PakPassage;
 import com.wer.parking.model.es.param.ParkingEsAccessInfoParam;
 import com.wer.parking.model.es.param.ParkingEsPayInfoParam;
 import com.wer.parking.model.param.ParkAccessInfoParam;
+import com.wer.parking.service.impl.IWebSocketService;
+import com.wer.parking.utlis.CommonUtils;
 import com.wer.parking.utlis.ElasticSearchSqlUtil;
 import com.wer.parking.utlis.ElasticSearchUtil;
 import com.wer.parking.utlis.TimeUtils;
 import com.wer.parking.utlis.enums.ParkingIndex;
+import com.wer.parking.utlis.netty.AlarmTypeConstants;
+import com.wer.parking.utlis.netty.NettyChannel;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -53,22 +57,25 @@ public class RequestPakAccessInfoController {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired(required=true)
+    @Autowired
     private PakAccessInfoMapper source1AccessInfoMapper;
     @Autowired
     private PakParkingPayInfoMapper pakParkingPayInfoMapper;
-    @Autowired(required=true)
+    @Autowired
     private PakAccessInfoTwoMapper source2AccessInfoMapper;
     @Autowired
     private PakParkingPayInfoTwoMapper pakParkingPayInfoTwoMapper;
-
+    @Autowired
+    private IWebSocketService webSocketService;
+    @Autowired
+    private PakParkingMapper pakParkingMapper;
     /**
      * 入场信息
      * @param param
      */
     @Transactional
     @GetMapping("/getAccessInfo")
-    public String getAccessInfo(@RequestBody ParkAccessInfoParam param){
+    public String getAccessInfo(@RequestBody ParkAccessInfoParam param) throws Exception{
 
         List<PakAccessInfo> pakAccessInfo = source1AccessInfoMapper.selectPakAccessInfoById(param);
 
@@ -89,7 +96,20 @@ public class RequestPakAccessInfoController {
                         .quitRemark(dto.getQuitRemark())
                         .parkSourceData(param.getParkSourceData())
                         .entryReqid(dto.getEntryReqid()).build();
-                 source2AccessInfoMapper.insertPakAccessInfo(pakAccessinfo);
+                source2AccessInfoMapper.insertPakAccessInfo(pakAccessinfo);
+
+                //获得车场信息
+                PakParking pakParking1 = pakParkingMapper.selectPakParkingById(dto.getParkingId());
+                //进场推送
+                String comeData = "\"parkingName\":\""+"进."+pakParking1.getParkingName()+"\",\"plateNo\":\""+dto.getCarPlate()+"\",\"parkingTime\":\""+dto.getEntryTime()+"\",\"id\":\""+ CommonUtils.getRandom() +"\"";
+                webSocketService.sendMessageByTenantId(comeData, AlarmTypeConstants.PAKING_ENTRY_ALARM, CommonUtils.TENANID_VALUE, NettyChannel.CHANNEL_THREE);
+                //出场推送
+                String outData = "\"parkingName\":\""+"出."+pakParking1.getParkingName()+"\",\"plateNo\":\""+dto.getCarPlate()+"\",\"parkingTime\":\""+TimeUtils.getDate(TimeUtils.getCurrentTime("3"))+"\",\"id\":\""+CommonUtils.getRandom()+"\"";
+                webSocketService.sendMessageByTenantId(outData,AlarmTypeConstants.PAKING_QUIT_ALARM,CommonUtils.TENANID_VALUE, NettyChannel.CHANNEL_THREE);
+
+
+
+
 
                 //通道信息
                 PakPassage pakPassage = source1AccessInfoMapper.selectPakPassageByName(PakPassage.builder().passageId(dto.getEntryPassageId()).parkingId(dto.getParkingId()).build());
@@ -188,10 +208,17 @@ public class RequestPakAccessInfoController {
                     .reqid(PakParkingPayInfo.getReqid()).build();
             int i = pakParkingPayInfoTwoMapper.insertPakParkingPayInfo(payInfo);
 
+            //获得车场信息
+            PakParking pakParking = pakParkingMapper.selectPakParkingById(PakParkingPayInfo.getParkingId());
+
+                if(Double.valueOf(PakParkingPayInfo.getActualPayment())>0){
+                    //缴费推送
+                    String data = "\"parkingName\":\""+pakParking.getParkingName()+"\",\"paidMoney\":\""+"+"+CommonUtils.getDecimaFormat(Double.valueOf(PakParkingPayInfo.getActualPayment())/100)+"\",\"payTime\":\""+PakParkingPayInfo.getPayTime()+"\",\"id\":\""+CommonUtils.getRandom()+"\"";
+                    webSocketService.sendMessageByTenantId(data,AlarmTypeConstants.PAKING_PAY_ALARM,CommonUtils.TENANID_VALUE, NettyChannel.CHANNEL_THREE);
+                }
+
             //出入场信息
             PakAccessInfo pakAccessInfoById = source1AccessInfoMapper.getPakAccessInfoById(PakAccessInfo.builder().parkingId(PakParkingPayInfo.getParkingId()).carPlate(PakParkingPayInfo.getCarPlate()).build());
-            //车场信息
-            PakParking pakParking = source1AccessInfoMapper.selectPakParkingById(PakParkingPayInfo.getParkingId());
             if(pakAccessInfoById != null){
                 //es插入
                 ParkingEsPayInfoParam esPayInfo = ParkingEsPayInfoParam.builder().pay_id(String.valueOf(payInfo.getPayId()))

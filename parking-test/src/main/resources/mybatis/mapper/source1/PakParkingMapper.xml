@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wer.parking.mapper.source1.PakParkingMapper">
+    
+    <resultMap type="com.wer.parking.model.PakParking" id="PakParkingResult">
+        <result property="parkingId"    column="parking_id"    />
+        <result property="parkingCode"    column="parking_code"    />
+        <result property="parkingName"    column="parking_name"    />
+        <result property="address"    column="address"    />
+        <result property="lat"    column="lat"    />
+        <result property="lon"    column="lon"    />
+        <result property="totalStall"    column="total_stall"    />
+        <result property="freeStall"    column="free_stall"    />
+        <result property="reqid"    column="reqId"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="parkSourceData"    column="park_source_data"    />
+    </resultMap>
+
+    <sql id="selectPakParkingVo">
+        select parking_id, parking_code, parking_name, total_stall, free_stall, reqId, status, del_flag, create_by,address,
+         lat,lon,create_time, update_by, update_time, remark, tenant_id ,park_source_data from pak_parking
+    </sql>
+
+    <select id="selectPakParkingList" parameterType="com.wer.parking.model.PakParking" resultMap="PakParkingResult">
+        <include refid="selectPakParkingVo"/>
+        <where>  
+            <if test="parkingName != null "> and parking_name like concat('%', #{parkingName}, '%')</if>
+            <if test="totalStall != null  and totalStall != ''"> and total_stall = #{totalStall}</if>
+            <if test="freeStall != null  and freeStall != ''"> and free_stall = #{freeStall}</if>
+            <if test="reqid != null  and reqid != ''"> and reqId = #{reqid}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="tenantId != null "> and tenant_id = #{tenantId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPakParkingById" parameterType="Long" resultMap="PakParkingResult">
+        <include refid="selectPakParkingVo"/>
+        where parking_code = #{parkingId} limit 1
+    </select>
+        
+    <insert id="insertPakParking" parameterType="com.wer.parking.model.PakParking" useGeneratedKeys="true" keyProperty="parkingId">
+        insert into pak_parking
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parkingCode != null">parking_code,</if>
+            <if test="parkingName != null">parking_name,</if>
+            <if test="lat != null and lat != ''">lat,</if>
+            <if test="lon != null and lon != ''">lon,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="totalStall != null and totalStall != ''">total_stall,</if>
+            <if test="freeStall != null and freeStall != ''">free_stall,</if>
+            <if test="reqid != null">reqId,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="parkSourceData != null and parkSourceData!=''">park_source_data</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parkingCode != null">#{parkingCode},</if>
+            <if test="parkingName != null">#{parkingName},</if>
+            <if test="lat != null and lat != ''">#{lat},</if>
+            <if test="lon != null and lon != ''">#{lon},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="totalStall != null and totalStall != ''">#{totalStall},</if>
+            <if test="freeStall != null and freeStall != ''">#{freeStall},</if>
+            <if test="reqid != null">#{reqid},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="parkSourceData != null and parkSourceData!=''">#{parkSourceData}</if>
+         </trim>
+    </insert>
+
+    <update id="updatePakParking" parameterType="com.wer.parking.model.PakParking">
+        update pak_parking
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parkingCode != null">parking_code = #{parkingCode},</if>
+            <if test="parkingName != null">parking_name = #{parkingName},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="lat != null and lat != ''">lat = #{lat},</if>
+            <if test="lon != null and lon != ''">lon = #{lon},</if>
+            <if test="totalStall != null and totalStall != ''">total_stall = #{totalStall},</if>
+            <if test="freeStall != null and freeStall != ''">free_stall = #{freeStall},</if>
+            <if test="reqid != null">reqId = #{reqid},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="parkSourceData != null">park_source_data = #{parkSourceData}</if>
+        </trim>
+        where parking_code = #{parkingId}
+    </update>
+
+    <delete id="deletePakParkingById" parameterType="Long">
+        delete from pak_parking where parking_id = #{parkingId}
+    </delete>
+
+    <delete id="deletePakParkingByIds" parameterType="String">
+        delete from pak_parking where parking_id in 
+        <foreach item="parkingId" collection="array" open="(" separator="," close=")">
+            #{parkingId}
+        </foreach>
+    </delete>
+
+</mapper>
