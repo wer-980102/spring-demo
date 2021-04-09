@@ -49,19 +49,6 @@ public class AlarmWebSocketHandler extends SimpleChannelInboundHandler<TextWebSo
     //存储ip和channel的容器
     private static ConcurrentMap<String, Channel> channelMap = new ConcurrentHashMap<>();
 
-    private static ConcurrentMap<String, ConcurrentMap> control20111 = new ConcurrentHashMap<>();
-
-    /** 总通道*/
-    private static ConcurrentMap<String, ConcurrentMap<String, ConcurrentMap>> control = new ConcurrentHashMap<>();
-
-    static {
-        /** 二级控制*/
-        //20775
-        control20111.put(CHANNELMAP, channelMap);
-
-        /** 一级控制*/
-        control.put(NettyChannel.CHANNEL_THREE, control20111);
-    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -71,7 +58,7 @@ public class AlarmWebSocketHandler extends SimpleChannelInboundHandler<TextWebSo
         logger.info("与客户端建立连接，通道开启！" + incoming.remoteAddress().toString());
         //添加到channelGroup通道组
         AlarmChannelHandlerPool.channelGroup.add(ctx.channel());
-        control.get(channelNumber).get(CHANNELMAP).put(incoming.remoteAddress().toString(), ctx.channel());
+        channelMap.put(CHANNELMAP, ctx.channel());
     }
 
     @Override
@@ -81,7 +68,7 @@ public class AlarmWebSocketHandler extends SimpleChannelInboundHandler<TextWebSo
         logger.info("与客户端断开连接，通道关闭！");
         //从channelGroup通道组移除
         AlarmChannelHandlerPool.channelGroup.remove(ctx.channel());
-        control.get(channelNumber).get(CHANNELMAP).remove(incoming.remoteAddress().toString());
+        channelMap.remove(CHANNELMAP);
     }
 
     @Override
@@ -166,11 +153,10 @@ public class AlarmWebSocketHandler extends SimpleChannelInboundHandler<TextWebSo
      * @param channelNumber
      */
     private void sendMessageByTenantIdImpl(String data,String state, String channelNumber){
-   /*     Channel channel = (Channel) control.get(channelNumber).get(CHANNELMAP);
+        Channel channel =  channelMap.get(CHANNELMAP);
         if (channel == null) {
             return;
-        }*/
-
+        }
         ChannelGroupFuture channelFutures = AlarmChannelHandlerPool.channelGroup.writeAndFlush(new TextWebSocketFrame("{\"state\":\"" + state + "\",\"data\":{" + data + "}}"));
         channelFutures.addListener(new ChannelFutureListener() {
             @Override
