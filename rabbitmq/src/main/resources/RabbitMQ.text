@@ -1,0 +1,7 @@
+1.消息队列是应用程序和应用程序之间的一种通信方法。
+2.RabbitMQ ： erlang语言开发、 基于AMQP协议。
+3.同类产品：ActiveMQ、 ZeroMQ、 RabbitMQ、 RocketMQ、 Kafka。
+4.Broker 消息队列服务进程、 Exchange消息队列交换机，Queue 消息队列、 Producer 消息生产者、 Consumer 消息消费者。
+5.六种模式： 简单模式、 工作模式、 发布与订阅模式、 路由模式、通配符模式、 远程调用模式（基本不会用到）。
+6.关键词：{Broker： 服务器实体、 Exchange ：消息交换机、 Queue： 消息队列载体、Binding： 绑定 、Routing Key： 路由关键字、 VHost： 虚拟主机、Producer： 消息生产者 、 Consumer： 消息消费者、Channel： 消息通道 }
+7.关键概念：由Exchange、Queue、RoutingKey三个才能决定一个从Exchange到Queue的唯一的线路。
