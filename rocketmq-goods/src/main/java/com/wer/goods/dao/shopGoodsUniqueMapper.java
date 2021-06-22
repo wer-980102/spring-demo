@@ -1,0 +1,12 @@
+package com.wer.goods.dao;
+
+import com.wer.goods.model.shopGoodsUnique;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface shopGoodsUniqueMapper {
+
+    int insert(shopGoodsUnique record);
+
+    int insertSelective(shopGoodsUnique record);
+}

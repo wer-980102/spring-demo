@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.dao.OrderDao">
+	<!-- 插入订单 -->
+
+	<insert id="insertOrder" useGeneratedKeys="true">
+		insert into shop_order (user_id,order_status,pay_status,shipping_status,
+		goods_id, goods_number,coupon_id,add_time)
+		values (#{userId,jdbcType=INTEGER},0,0,0,
+		#{goodsId,jdbcType=INTEGER},#{goodsNumber,jdbcType=INTEGER},#{couponId,jdbcType=INTEGER},now())
+	</insert>
+
+
+
+</mapper>
